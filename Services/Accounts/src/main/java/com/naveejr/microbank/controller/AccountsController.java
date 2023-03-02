@@ -1,7 +1,7 @@
 package com.naveejr.microbank.controller;
 
-import com.naveejr.microbank.bo.Accounts;
-import com.naveejr.microbank.dto.Customer;
+import com.naveejr.microbank.bo.Account;
+import com.naveejr.microbank.dto.CustomerDTO;
 import com.naveejr.microbank.repository.AccountsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,8 +18,8 @@ public class AccountsController {
 	private final AccountsRepository accountsRepository;
 
 	@PostMapping("myAccount")
-	public Accounts getAccountDetails(@RequestBody Customer customer) {
-		return accountsRepository.findByCustomerId(customer.id());
+	public Account getAccountDetails(@RequestBody CustomerDTO customerDTO) {
+		return accountsRepository.findByCustomerId(customerDTO.id());
 	}
 
 }

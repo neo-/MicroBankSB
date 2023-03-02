@@ -1,5 +1,14 @@
 DROP TABLE IF EXISTS accounts;
+DROP TABLE IF EXISTS customer;
 
+CREATE TABLE `customer`
+(
+    `customer_id`   int AUTO_INCREMENT PRIMARY KEY,
+    `name`          varchar(100) NOT NULL,
+    `email`         varchar(100) NOT NULL,
+    `mobile_number` varchar(20)  NOT NULL,
+    `created_at`    date DEFAULT NULL
+);
 CREATE TABLE `accounts`
 (
     `customer_id`    int          NOT NULL,
@@ -9,6 +18,8 @@ CREATE TABLE `accounts`
     `created_at`     date DEFAULT NULL
 );
 
+INSERT INTO `customer` (`name`, `email`, `mobile_number`, `created_at`)
+VALUES ('Eazy Bytes', 'tutor@eazybytes.com', '9876548337', CURDATE());
 
 INSERT INTO `accounts` (`customer_id`, `account_number`, `account_type`, `branch_address`, `created_at`)
 VALUES (1, 186576453, 'Savings', '123 Main Street, New York', CURDATE());

@@ -1,10 +1,10 @@
 package com.naveejr.microbank.repository;
 
-import com.naveejr.microbank.bo.Accounts;
+import com.naveejr.microbank.bo.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AccountsRepository extends JpaRepository<Accounts, Long> {
+public interface AccountsRepository extends JpaRepository<Account, Long> {
 
 
-	Accounts findByCustomerId(Long id);
+	Account findByCustomerId(Long id);
 }
