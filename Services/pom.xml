@@ -43,7 +43,7 @@
                         </exclude>
                     </excludes>
                     <image>
-                        <name>microbank/${project.artifactId}</name>
+                        <name>naveejr/microbank-${project.artifactId}</name>
                     </image>
                 </configuration>
             </plugin>
