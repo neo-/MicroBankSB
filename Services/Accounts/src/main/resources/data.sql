@@ -19,7 +19,7 @@ CREATE TABLE accounts
 );
 
 INSERT INTO customer (`name`, email, mobile_number, created_at)
-VALUES ('Eazy Bytes', 'tutor@eazybytes.com', '9876548337', CURDATE());
+VALUES ('Micro Customer', 'tutor@microbk.com', '9876548337', CURDATE());
 
 INSERT INTO accounts (customer_id, account_number, account_type, branch_address, created_at)
 VALUES (1, 186576453, 'Savings', '123 Main Street, New York', CURDATE());
