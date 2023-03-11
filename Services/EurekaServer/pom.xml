@@ -9,7 +9,7 @@
     </parent>
 
     <groupId>com.naveejr</groupId>
-    <artifactId>EurekaServer</artifactId>
+    <artifactId>eurekaserver</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>EurekaServer</name>
     <description>EurekaServer</description>
