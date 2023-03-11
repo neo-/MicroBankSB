@@ -21,5 +21,12 @@ CREATE TABLE accounts
 INSERT INTO customer (`name`, email, mobile_number, created_at)
 VALUES ('Micro Customer', 'tutor@microbk.com', '9876548337', CURDATE());
 
+
+INSERT INTO customer (`name`, email, mobile_number, created_at)
+VALUES ('Micro Customer2', 'tutor@microbk.com', '9876548337', CURDATE());
+
 INSERT INTO accounts (customer_id, account_number, account_type, branch_address, created_at)
 VALUES (1, 186576453, 'Savings', '123 Main Street, New York', CURDATE());
+
+INSERT INTO accounts (customer_id, account_number, account_type, branch_address, created_at)
+VALUES (2, 186576483, 'Credit', '123 Main Street, Colombo', CURDATE());

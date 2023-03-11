@@ -21,3 +21,6 @@ VALUES (1, 'ASEWIE234SDF', 'DEBIT', 100000, 130000, 2332323,  CURDATE());
 
 INSERT INTO cards (customer_id, card_number, card_type, total_limit, amount_used, available_amount, created_at)
 VALUES (1, 'XXXISS3443SV', 'CREDIT', 550000, 4333, 22223,  CURDATE());
+
+INSERT INTO cards (customer_id, card_number, card_type, total_limit, amount_used, available_amount, created_at)
+VALUES (2, 'XXXITT3443SV', 'CREDIT', 540000, 4533, 22113,  CURDATE());
