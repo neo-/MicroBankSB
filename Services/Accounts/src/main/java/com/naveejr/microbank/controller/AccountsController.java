@@ -5,11 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.naveejr.microbank.bo.Account;
 import com.naveejr.microbank.config.AccountServiceConfig;
-import com.naveejr.microbank.dto.CustomerDTO;
-import com.naveejr.microbank.dto.Properties;
+import com.naveejr.microbank.dto.*;
 import com.naveejr.microbank.repository.AccountsRepository;
+import com.naveejr.microbank.service.client.CardsFeignClient;
+import com.naveejr.microbank.service.client.LoansFeignClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RequiredArgsConstructor
@@ -22,9 +25,21 @@ public class AccountsController {
 
 	private final AccountServiceConfig accountServiceConfig;
 
+	private final CardsFeignClient cardsFeignClient;
+	private final LoansFeignClient loansFeignClient;
+
 	@PostMapping("myAccount")
 	public Account getAccountDetails(@RequestBody CustomerDTO customerDTO) {
 		return accountsRepository.findByCustomerId(customerDTO.id());
+	}
+
+	@PostMapping("myCustomerDetails")
+	public CustomerDetails getCustomerDetails(@RequestBody CustomerDTO customerDTO) {
+		Account account = accountsRepository.findByCustomerId(customerDTO.id());
+		List<CardsDTO> cards = cardsFeignClient.getCardDetails(customerDTO);
+		List<LoansDTO> loans = loansFeignClient.getLoanDetails(customerDTO);
+		return new CustomerDetails(customerDTO, account, cards, loans);
+
 	}
 
 	@GetMapping("properties")
