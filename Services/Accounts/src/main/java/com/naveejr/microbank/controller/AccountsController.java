@@ -10,12 +10,14 @@ import com.naveejr.microbank.repository.AccountsRepository;
 import com.naveejr.microbank.service.client.CardsFeignClient;
 import com.naveejr.microbank.service.client.LoansFeignClient;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 
 @RequiredArgsConstructor
+@Slf4j
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -30,6 +32,7 @@ public class AccountsController {
 
 	@PostMapping("myAccount")
 	public Account getAccountDetails(@RequestBody CustomerDTO customerDTO) {
+		log.info("Getting account details {}", customerDTO);
 		return accountsRepository.findByCustomerId(customerDTO.id());
 	}
 
