@@ -9,13 +9,18 @@ import com.naveejr.microbank.dto.*;
 import com.naveejr.microbank.repository.AccountsRepository;
 import com.naveejr.microbank.service.client.CardsFeignClient;
 import com.naveejr.microbank.service.client.LoansFeignClient;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 
 @RequiredArgsConstructor
+@Slf4j
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -30,16 +35,25 @@ public class AccountsController {
 
 	@PostMapping("myAccount")
 	public Account getAccountDetails(@RequestBody CustomerDTO customerDTO) {
+		log.info("Getting account details {}", customerDTO);
 		return accountsRepository.findByCustomerId(customerDTO.id());
 	}
 
 	@PostMapping("myCustomerDetails")
+	@CircuitBreaker(name = "detailsForCustomerSupportApp", fallbackMethod = "myCustomerDetailsFallback")
 	public CustomerDetails getCustomerDetails(@RequestBody CustomerDTO customerDTO) {
 		Account account = accountsRepository.findByCustomerId(customerDTO.id());
 		List<CardsDTO> cards = cardsFeignClient.getCardDetails(customerDTO);
 		List<LoansDTO> loans = loansFeignClient.getLoanDetails(customerDTO);
 		return new CustomerDetails(customerDTO, account, cards, loans);
+	}
 
+	private CustomerDetails myCustomerDetailsFallback(CustomerDTO customerDTO, Throwable t) {
+		log.error("Failed to connect to microservice ", t);
+		Account account = accountsRepository.findByCustomerId(customerDTO.id());
+		//List<CardsDTO> cards = cardsFeignClient.getCardDetails(customerDTO);
+		List<LoansDTO> loans = loansFeignClient.getLoanDetails(customerDTO);
+		return new CustomerDetails(customerDTO, account, null, loans);
 	}
 
 	@GetMapping("properties")
