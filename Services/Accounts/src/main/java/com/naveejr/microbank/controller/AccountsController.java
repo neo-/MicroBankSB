@@ -51,7 +51,6 @@ public class AccountsController {
 	private CustomerDetails myCustomerDetailsFallback(CustomerDTO customerDTO, Throwable t) {
 		log.error("Failed to connect to microservice ", t);
 		Account account = accountsRepository.findByCustomerId(customerDTO.id());
-		//List<CardsDTO> cards = cardsFeignClient.getCardDetails(customerDTO);
 		List<LoansDTO> loans = loansFeignClient.getLoanDetails(customerDTO);
 		return new CustomerDetails(customerDTO, account, null, loans);
 	}
