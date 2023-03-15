@@ -9,6 +9,7 @@ import com.naveejr.microbank.dto.*;
 import com.naveejr.microbank.repository.AccountsRepository;
 import com.naveejr.microbank.service.client.CardsFeignClient;
 import com.naveejr.microbank.service.client.LoansFeignClient;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -37,12 +38,12 @@ public class AccountsController {
 	}
 
 	@PostMapping("myCustomerDetails")
+	@CircuitBreaker(name = "detailsForCustomerSupportApp")
 	public CustomerDetails getCustomerDetails(@RequestBody CustomerDTO customerDTO) {
 		Account account = accountsRepository.findByCustomerId(customerDTO.id());
 		List<CardsDTO> cards = cardsFeignClient.getCardDetails(customerDTO);
 		List<LoansDTO> loans = loansFeignClient.getLoanDetails(customerDTO);
 		return new CustomerDetails(customerDTO, account, cards, loans);
-
 	}
 
 	@GetMapping("properties")
