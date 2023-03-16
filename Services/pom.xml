@@ -22,6 +22,7 @@
         <module>Cards</module>
         <module>ConfigServer</module>
         <module>EurekaServer</module>
+        <module>GatewayServer</module>
     </modules>
 
     <properties>
