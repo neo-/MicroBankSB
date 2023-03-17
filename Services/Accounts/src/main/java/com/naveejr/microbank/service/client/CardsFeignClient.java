@@ -5,6 +5,7 @@ import com.naveejr.microbank.dto.CustomerDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.List;
 
@@ -12,5 +13,6 @@ import java.util.List;
 public interface CardsFeignClient {
 
 	@PostMapping("myCards")
-	List<CardsDTO> getCardDetails(@RequestBody CustomerDTO customer);
+	List<CardsDTO> getCardDetails(@RequestHeader("microbank-correlation-id") String correlationId,
+			@RequestBody CustomerDTO customer);
 }

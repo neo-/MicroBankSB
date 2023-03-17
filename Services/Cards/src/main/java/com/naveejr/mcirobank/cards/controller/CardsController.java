@@ -9,11 +9,13 @@ import com.naveejr.mcirobank.cards.dto.CustomerDTO;
 import com.naveejr.mcirobank.cards.dto.Properties;
 import com.naveejr.mcirobank.cards.repository.CardsRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RequiredArgsConstructor
+@Slf4j
 
 @RestController
 @RequestMapping("/api")
