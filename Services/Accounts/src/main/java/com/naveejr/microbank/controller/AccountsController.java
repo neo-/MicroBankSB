@@ -11,9 +11,8 @@ import com.naveejr.microbank.service.client.CardsFeignClient;
 import com.naveejr.microbank.service.client.LoansFeignClient;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.implementation.bytecode.Throw;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +22,7 @@ import java.util.List;
 @Slf4j
 
 @RestController
-@RequestMapping("/api/accounts")
+@RequestMapping("/api")
 public class AccountsController {
 
 	private final AccountsRepository accountsRepository;
@@ -33,6 +32,11 @@ public class AccountsController {
 	private final CardsFeignClient cardsFeignClient;
 	private final LoansFeignClient loansFeignClient;
 
+	@GetMapping
+	public ResponseEntity<String> health() {
+		return ResponseEntity.ok("Health OK");
+	}
+
 	@PostMapping("myAccount")
 	public Account getAccountDetails(@RequestBody CustomerDTO customerDTO) {
 		log.info("Getting account details {}", customerDTO);
@@ -41,17 +45,18 @@ public class AccountsController {
 
 	@PostMapping("myCustomerDetails")
 	@CircuitBreaker(name = "detailsForCustomerSupportApp", fallbackMethod = "myCustomerDetailsFallback")
-	public CustomerDetails getCustomerDetails(@RequestBody CustomerDTO customerDTO) {
+	public CustomerDetails getCustomerDetails(@RequestHeader("microbank-correlation-id") String correlationId,
+			@RequestBody CustomerDTO customerDTO) {
 		Account account = accountsRepository.findByCustomerId(customerDTO.id());
-		List<CardsDTO> cards = cardsFeignClient.getCardDetails(customerDTO);
-		List<LoansDTO> loans = loansFeignClient.getLoanDetails(customerDTO);
+		List<CardsDTO> cards = cardsFeignClient.getCardDetails(correlationId, customerDTO);
+		List<LoansDTO> loans = loansFeignClient.getLoanDetails(correlationId, customerDTO);
 		return new CustomerDetails(customerDTO, account, cards, loans);
 	}
 
-	private CustomerDetails myCustomerDetailsFallback(CustomerDTO customerDTO, Throwable t) {
+	private CustomerDetails myCustomerDetailsFallback(@RequestHeader("microbank-correlation-id") String correlationId, CustomerDTO customerDTO, Throwable t) {
 		log.error("Failed to connect to microservice ", t);
 		Account account = accountsRepository.findByCustomerId(customerDTO.id());
-		List<LoansDTO> loans = loansFeignClient.getLoanDetails(customerDTO);
+		List<LoansDTO> loans = loansFeignClient.getLoanDetails(correlationId, customerDTO);
 		return new CustomerDetails(customerDTO, account, null, loans);
 	}
 
