@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(name = "cards", path = "/api/cards")
+@FeignClient(name = "cards", path = "/api")
 public interface CardsFeignClient {
 
 	@PostMapping("myCards")

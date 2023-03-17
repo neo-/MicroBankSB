@@ -11,9 +11,8 @@ import com.naveejr.microbank.service.client.CardsFeignClient;
 import com.naveejr.microbank.service.client.LoansFeignClient;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.implementation.bytecode.Throw;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +22,7 @@ import java.util.List;
 @Slf4j
 
 @RestController
-@RequestMapping("/api/accounts")
+@RequestMapping("/api")
 public class AccountsController {
 
 	private final AccountsRepository accountsRepository;
@@ -32,6 +31,11 @@ public class AccountsController {
 
 	private final CardsFeignClient cardsFeignClient;
 	private final LoansFeignClient loansFeignClient;
+
+	@GetMapping
+	public ResponseEntity<String> health() {
+		return ResponseEntity.ok("Health OK");
+	}
 
 	@PostMapping("myAccount")
 	public Account getAccountDetails(@RequestBody CustomerDTO customerDTO) {
