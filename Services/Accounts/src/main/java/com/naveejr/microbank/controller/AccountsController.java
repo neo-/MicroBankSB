@@ -11,7 +11,8 @@ import com.naveejr.microbank.service.client.CardsFeignClient;
 import com.naveejr.microbank.service.client.LoansFeignClient;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,12 +20,12 @@ import java.util.List;
 
 
 @RequiredArgsConstructor
-@Slf4j
 
 @RestController
 @RequestMapping("/api")
 public class AccountsController {
 
+	private static final Logger log = LoggerFactory.getLogger(AccountsController.class);
 	private final AccountsRepository accountsRepository;
 
 	private final AccountServiceConfig accountServiceConfig;
@@ -47,10 +48,13 @@ public class AccountsController {
 	@CircuitBreaker(name = "detailsForCustomerSupportApp", fallbackMethod = "myCustomerDetailsFallback")
 	public CustomerDetails getCustomerDetails(@RequestHeader("microbank-correlation-id") String correlationId,
 			@RequestBody CustomerDTO customerDTO) {
+		log.info("Getting myCustomer Details {}", customerDTO);
 		Account account = accountsRepository.findByCustomerId(customerDTO.id());
 		List<CardsDTO> cards = cardsFeignClient.getCardDetails(correlationId, customerDTO);
 		List<LoansDTO> loans = loansFeignClient.getLoanDetails(correlationId, customerDTO);
-		return new CustomerDetails(customerDTO, account, cards, loans);
+		CustomerDetails customerDetails = new CustomerDetails(customerDTO, account, cards, loans);
+		log.info("Customer details {}", customerDetails);
+		return customerDetails;
 	}
 
 	private CustomerDetails myCustomerDetailsFallback(@RequestHeader("microbank-correlation-id") String correlationId, CustomerDTO customerDTO, Throwable t) {
