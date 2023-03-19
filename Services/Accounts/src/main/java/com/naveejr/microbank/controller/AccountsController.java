@@ -47,6 +47,7 @@ public class AccountsController {
 	}
 
 	@PostMapping("myCustomerDetails")
+	@Timed(value = "getCustomerDetails.time", description = "Time taken to return Customer details")
 	@CircuitBreaker(name = "detailsForCustomerSupportApp", fallbackMethod = "myCustomerDetailsFallback")
 	public CustomerDetails getCustomerDetails(@RequestHeader("microbank-correlation-id") String correlationId,
 			@RequestBody CustomerDTO customerDTO) {
