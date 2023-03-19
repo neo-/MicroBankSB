@@ -9,24 +9,26 @@ import com.naveejr.mcirobank.cards.dto.CustomerDTO;
 import com.naveejr.mcirobank.cards.dto.Properties;
 import com.naveejr.mcirobank.cards.repository.CardsRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RequiredArgsConstructor
-@Slf4j
 
 @RestController
 @RequestMapping("/api")
 public class CardsController {
 
+	private static final Logger log = LoggerFactory.getLogger(CardsController.class);
 	private final CardsRepository cardsRepository;
 
 	private final CardsServiceConfig cardsServiceConfig;
 
 	@PostMapping("myCards")
 	public List<Card> getCardsDetails(@RequestBody CustomerDTO customerDTO) {
+		log.info("Getting Cards Details {} ", customerDTO);
 		return cardsRepository.findByCustomerId(customerDTO.id());
 	}
 

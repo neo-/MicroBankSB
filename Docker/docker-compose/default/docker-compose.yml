@@ -2,6 +2,14 @@ version: "3.8"
 
 services:
 
+  zipkin:
+    image: openzipkin/zipkin
+    mem_limit: 700m
+    ports:
+      - "9411:9411"
+    networks:
+     - mirobank
+
   configserver:
     image: naveejr/microbank-configserver:latest
     mem_limit: 700m
@@ -9,6 +17,10 @@ services:
       - "8071:8071"
     networks:
      - mirobank
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411
+
   eurekaserver:
     image: naveejr/microbank-eurekaserver:latest
     mem_limit: 700m
@@ -27,6 +39,8 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: default
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411
+
   accounts:
     image: naveejr/microbank-accounts:latest
     mem_limit: 700m
@@ -47,7 +61,8 @@ services:
       SPRING_PROFILES_ACTIVE: default
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
-  
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411
+
   loans:
     image: naveejr/microbank-loans:latest
     mem_limit: 700m
@@ -68,7 +83,8 @@ services:
       SPRING_PROFILES_ACTIVE: default
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
-    
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411
+
   cards:
     image: naveejr/microbank-cards:latest
     mem_limit: 700m
@@ -89,6 +105,32 @@ services:
       SPRING_PROFILES_ACTIVE: default
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
-      
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411
+
+  gatewayserver:
+    image: naveejr/microbank-gatewayserver:latest
+    mem_limit: 700m
+    ports:
+      - "8072:8072"
+    networks:
+     - mirobank
+    depends_on:
+      - configserver
+      - eurekaserver
+      - accounts
+      - cards
+      - loans
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 45s
+        max_attempts: 3
+        window: 180s
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411
+
 networks:
   mirobank:
