@@ -10,6 +10,7 @@ import com.naveejr.microbank.repository.AccountsRepository;
 import com.naveejr.microbank.service.client.CardsFeignClient;
 import com.naveejr.microbank.service.client.LoansFeignClient;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,7 @@ public class AccountsController {
 	}
 
 	@PostMapping("myAccount")
+	@Timed(value = "getAccountDetails.time", description = "Time taken to return Account details")
 	public Account getAccountDetails(@RequestBody CustomerDTO customerDTO) {
 		log.info("Getting account details {}", customerDTO);
 		return accountsRepository.findByCustomerId(customerDTO.id());
