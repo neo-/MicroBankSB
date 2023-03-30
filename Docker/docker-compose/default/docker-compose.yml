@@ -1,6 +1,26 @@
 version: "3.8"
 
 services:
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - mirobank
+
+  grafana:
+    image: "grafana/grafana:latest"
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - mirobank
+    depends_on:
+      - prometheus
 
   zipkin:
     image: openzipkin/zipkin
@@ -8,7 +28,7 @@ services:
     ports:
       - "9411:9411"
     networks:
-     - mirobank
+      - mirobank
 
   configserver:
     image: naveejr/microbank-configserver:latest
@@ -16,7 +36,7 @@ services:
     ports:
       - "8071:8071"
     networks:
-     - mirobank
+      - mirobank
     environment:
       SPRING_PROFILES_ACTIVE: default
       SPRING_ZIPKIN_BASEURL: http://zipkin:9411
@@ -27,7 +47,7 @@ services:
     ports:
       - "8070:8070"
     networks:
-     - mirobank
+      - mirobank
     depends_on:
       - configserver
     deploy:
@@ -113,7 +133,7 @@ services:
     ports:
       - "8072:8072"
     networks:
-     - mirobank
+      - mirobank
     depends_on:
       - configserver
       - eurekaserver
