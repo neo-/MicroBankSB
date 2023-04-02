@@ -60,7 +60,8 @@ public class AccountsController {
 		return customerDetails;
 	}
 
-	private CustomerDetails myCustomerDetailsFallback(@RequestHeader("microbank-correlation-id") String correlationId, CustomerDTO customerDTO, Throwable t) {
+	private CustomerDetails myCustomerDetailsFallback(@RequestHeader("microbank-correlation-id") String correlationId,
+			CustomerDTO customerDTO, Throwable t) {
 		log.error("Failed to connect to microservice ", t);
 		Account account = accountsRepository.findByCustomerId(customerDTO.id());
 		List<LoansDTO> loans = loansFeignClient.getLoanDetails(correlationId, customerDTO);
