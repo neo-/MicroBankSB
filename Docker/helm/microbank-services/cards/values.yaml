@@ -1,0 +1,20 @@
+deploymentName: cards-deployment
+deploymentLabel: cards
+
+replicaCount: 1
+
+image:
+  repository: naveejr/microbank-cards
+  tag: latest
+
+containerPort: 9000
+
+service:
+  type: LoadBalancer
+  port: 9000
+  targetPort: 9000
+
+profile_enabled: true
+zipkin_enabled: true
+config_enabled: true
+eureka_enabled: true

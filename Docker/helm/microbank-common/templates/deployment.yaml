@@ -1,0 +1,54 @@
+{{define "common.deployment"}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Values.deploymentName}}
+  labels:
+    app: {{.Values.deploymentLabel}}
+spec:
+  replicas: {{.Values.replicaCount}}
+  selector:
+    matchLabels:
+      app: {{.Values.deploymentLabel}}
+  template:
+    metadata:
+      labels:
+        app: {{.Values.deploymentLabel}}
+    spec:
+      containers:
+        - name: {{.Values.deploymentLabel}}
+        - image: "{{.Values.image.repository}}:{{.Values.image.tag}}"
+          ports:
+            - containerPort: {{.Values.containerPort}}
+              protocol: TCP
+          env:
+          {{if .Values.profile_enabled}}
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom:
+                configMapKeyRef:
+                  key: SPRING_PROFILES_ACTIVE
+                  name: {{.Values.global.configMapName}}
+          {{end}}
+
+          {{if .Values.zipkin_enabled}}
+            - name: SPRING_ZIPKIN_BASEURL
+              valueFrom:
+                configMapKeyRef:
+                  key: SPRING_ZIPKIN_BASEURL
+                  name: {{.Values.global.configMapName}}
+          {{end}}
+          {{if .Values.config_enabled}}
+            - name: SPRING_CONFIG_IMPORT
+              valueFrom:
+                configMapKeyRef:
+                  key: SPRING_CONFIG_IMPORT
+                  name: {{.Values.global.configMapName}}
+          {{end}}
+          {{if .Values.eureka_enabled}}
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              valueFrom:
+                configMapKeyRef:
+                  key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+                  name: {{.Values.global.configMapName}}
+          {{end}}
+{{end}}

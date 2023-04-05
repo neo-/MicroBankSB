@@ -1,0 +1,20 @@
+deploymentName: loans-deployment
+deploymentLabel: loans
+
+replicaCount: 1
+
+image:
+  repository: naveejr/microbank-loans
+  tag: latest
+
+containerPort: 8090
+
+service:
+  type: LoadBalancer
+  port: 8090
+  targetPort: 8090
+
+profile_enabled: true
+zipkin_enabled: true
+config_enabled: true
+eureka_enabled: true
