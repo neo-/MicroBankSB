@@ -32,7 +32,7 @@ dependencies:
     version: 0.1.0
     repository: file://../../microbank-services/zipkin
 
-  - name: config-server
+  - name: configserver
     version: 0.1.0
     repository: file://../../microbank-services/configserver
 
