@@ -1,5 +1,5 @@
 apiVersion: v2
-name: cards
+name: prod-env
 description: A Helm chart for Kubernetes
 
 # A chart can be either an 'application' or a 'library' chart.
@@ -27,3 +27,31 @@ dependencies:
   - name: microbank-common
     version: 0.1.0
     repository: file://../../microbank-common
+
+  - name: zipkin
+    version: 0.1.0
+    repository: file://../../microbank-services/zipkin
+
+  - name: config-server
+    version: 0.1.0
+    repository: file://../../microbank-services/configserver
+
+  - name: eurekaserver
+    version: 0.1.0
+    repository: file://../../microbank-services/eurekaserver
+
+  - name: accounts
+    version: 0.1.0
+    repository: file://../../microbank-services/accounts
+
+  - name: cards
+    version: 0.1.0
+    repository: file://../../microbank-services/cards
+
+  - name: loans
+    version: 0.1.0
+    repository: file://../../microbank-services/loans
+
+  - name: gatewayserver
+    version: 0.1.0
+    repository: file://../../microbank-services/gatewayserver
