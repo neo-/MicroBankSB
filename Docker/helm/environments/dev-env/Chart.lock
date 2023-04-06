@@ -1,0 +1,27 @@
+dependencies:
+- name: microbank-common
+  repository: file://../../microbank-common
+  version: 0.1.0
+- name: zipkin
+  repository: file://../../microbank-services/zipkin
+  version: 0.1.0
+- name: configserver
+  repository: file://../../microbank-services/configserver
+  version: 0.1.0
+- name: eurekaserver
+  repository: file://../../microbank-services/eurekaserver
+  version: 0.1.0
+- name: accounts
+  repository: file://../../microbank-services/accounts
+  version: 0.1.0
+- name: cards
+  repository: file://../../microbank-services/cards
+  version: 0.1.0
+- name: loans
+  repository: file://../../microbank-services/loans
+  version: 0.1.0
+- name: gatewayserver
+  repository: file://../../microbank-services/gatewayserver
+  version: 0.1.0
+digest: sha256:91217ef77e5876d075010c632fbeeb7e18c758496c9b485ad77f63bc93e055ce
+generated: "2023-04-06T22:04:52.194281744+05:30"
